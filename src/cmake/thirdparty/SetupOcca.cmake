@@ -9,6 +9,7 @@ endif()
 MESSAGE(STATUS "Looking for OCCA using OCCA_DIR = ${OCCA_DIR}")
 
 set(occa_DIR ${OCCA_DIR}/lib)
+set(OCCA_INCLUDE_DIRS ${OCCA_DIR}/include)
 message(STATUS "Found OCCA include dirs: ${OCCA_INCLUDE_DIRS}")
 
 find_path(OCCA_INCLUDE_DIRS occa.hpp

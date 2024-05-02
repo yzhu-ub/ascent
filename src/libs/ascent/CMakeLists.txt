@@ -605,6 +605,8 @@ if(MPI_FOUND)
     if (FIDES_FOUND)
         list(APPEND ascent_headers runtimes/flow_filters/ascent_runtime_adios2_filters.hpp)
         list(APPEND ascent_sources runtimes/flow_filters/ascent_runtime_adios2_filters.cpp)
+        list(APPEND ascent_headers runtimes/flow_filters/ascent_runtime_adios2_compression_filters.hpp)
+        list(APPEND ascent_sources runtimes/flow_filters/ascent_runtime_adios2_compression_filters.cpp)
         list(APPEND ascent_mpi_thirdparty_libs adios2::adios2 fides)
     endif()
 
