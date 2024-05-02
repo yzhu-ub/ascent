@@ -40,10 +40,10 @@ namespace filters {
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-class ADIOS2 : public ::flow::Filter {
+class ADIOS2Compression : public ::flow::Filter {
 public:
-  ADIOS2();
-  ~ADIOS2();
+  ADIOS2Compression();
+  ~ADIOS2Compression();
 
   virtual void declare_interface(conduit::Node &i);
   virtual bool verify_params(const conduit::Node &params, conduit::Node &info);

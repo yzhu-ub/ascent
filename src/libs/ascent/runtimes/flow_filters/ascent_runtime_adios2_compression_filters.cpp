@@ -91,20 +91,21 @@ namespace runtime {
 namespace filters {
 
 //-----------------------------------------------------------------------------
-ADIOS2::ADIOS2() : Filter() {}
+ADIOS2Compression::ADIOS2Compression() : Filter() {}
 
 //-----------------------------------------------------------------------------
-ADIOS2::~ADIOS2() {}
+ADIOS2Compression::~ADIOS2Compression() {}
 
 //-----------------------------------------------------------------------------
-void ADIOS2::declare_interface(Node &i) {
-  i["type_name"] = "adios2";
+void ADIOS2Compression::declare_interface(Node &i) {
+  i["type_name"] = "adios2-comp";
   i["port_names"].append() = "in";
   i["output_port"] = "false";
 }
 
 //-----------------------------------------------------------------------------
-bool ADIOS2::verify_params(const conduit::Node &params, conduit::Node &info) {
+bool ADIOS2Compression::verify_params(const conduit::Node &params,
+                                      conduit::Node &info) {
   bool res = true;
   if (!params.has_child("filename") ||
       !params["filename"].dtype().is_string()) {
@@ -134,7 +135,7 @@ bool ADIOS2::verify_params(const conduit::Node &params, conduit::Node &info) {
 }
 
 //-----------------------------------------------------------------------------
-void ADIOS2::execute() {
+void ADIOS2Compression::execute() {
   ASCENT_INFO("execute");
 
   std::string engineType = params()["engine"].as_string();
@@ -144,7 +145,7 @@ void ADIOS2::execute() {
     writer = new fides::io::DataSetAppendWriter(fileName);
 
   if (!input(0).check_type<DataObject>()) {
-    ASCENT_ERROR("ADIOS2 input must be a data object");
+    ASCENT_ERROR("ADIOS2Compression input must be a data object");
   }
 
   // If fields set, set the WriteFields attribute.
