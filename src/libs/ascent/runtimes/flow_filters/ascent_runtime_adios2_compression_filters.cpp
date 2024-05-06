@@ -18,6 +18,9 @@
 
 // conduit includes
 #include <conduit.hpp>
+#include <conduit_blueprint.hpp>
+#include <conduit_blueprint_mesh.hpp>
+#include <conduit_relay.hpp>
 
 //-----------------------------------------------------------------------------
 // ascent includes
@@ -98,7 +101,7 @@ ADIOS2Compression::~ADIOS2Compression() {}
 
 //-----------------------------------------------------------------------------
 void ADIOS2Compression::declare_interface(Node &i) {
-  i["type_name"] = "adios2-comp";
+  i["type_name"] = "adios2_comp";
   i["port_names"].append() = "in";
   i["output_port"] = "false";
 }
@@ -164,6 +167,19 @@ void ADIOS2Compression::execute() {
   }
 
   DataObject *data_object = input<DataObject>(0);
+  std::shared_ptr<conduit::Node> node = data_object->as_node();
+
+  auto aaa = node.get();
+
+  (*aaa)[0]["fields/X/values"].print();
+
+  conduit::Node &values = (*aaa)[0]["fields/X/values"];
+
+  for (index_t i = 0; i < 40; i++) {
+    const conduit::Node &val = values[i];
+    std::cout << "my_vals[" << i << "] = " << val.as_float64() << std::endl;
+  }
+
   std::shared_ptr<VTKHCollection> collection =
       data_object->as_vtkh_collection();
 
@@ -174,10 +190,22 @@ void ADIOS2Compression::execute() {
 
   vtkm::cont::PartitionedDataSet pds;
   vtkm::Id numDS = data.GetNumberOfDomains();
-  for (vtkm::Id i = 0; i < numDS; i++)
-    pds.AppendPartition(data.GetDomain(i));
+  for (vtkm::Id i = 0; i < numDS; i++) {
+    vtkm::cont::DataSet ds = data.GetDomain(i);
+    std::cout << "Num of points:" << ds.GetNumberOfPoints() << std::endl;
+    vtkm::cont::Field ff = ds.GetField("X");
 
-  writer->Write(pds, engineType);
+    // should be a point field
+    std::cout << "Is point field:" << ff.IsPointField() << std::endl;
+
+    vtkm::cont::UnknownArrayHandle &dd = ff.GetData();
+
+    pds.AppendPartition(data.GetDomain(i));
+  }
+
+  std::cout << "Pretend to write" << std::endl;
+
+  // writer->Write(pds, engineType);
 }
 
 //-----------------------------------------------------------------------------
